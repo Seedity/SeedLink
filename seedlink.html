@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Get SeedLink</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      background-color: #f8f8f8;
+    }
+
+    .custom-button {
+      background-color: #FFBB00;
+      color: black;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .custom-button:hover {
+      background-color: black;
+      color: #FFBB00;
+    }
+
+    .note {
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to SeedLink</h1>
+  <button class="custom-button" onclick="openLink()">Get SeedLink</button>
+  <div class="note">
+    If nothing happens, please ensure pop-ups are allowed.<br/>
+    Go to <strong>Settings > Safari</strong> and disable <em>"Block Pop-ups"</em>.
+  </div>
+
+  <script>
+    function openLink() {
+      const newTab = window.open('about:blank', '_blank');
+
+      if (!newTab) {
+        alert('⚠️ Safari blocked the popup.\n\nTo fix this, go to:\nSettings > Safari > and turn OFF "Block Pop-ups".');
+        return;
+      }
+
+      newTab.document.write('<p style="font-family:sans-serif;">Loading SeedLink...</p>');
+
+      fetch('https://dl.dropbox.com/scl/fi/7mwjhmka74eoyrxfs15u7/iCloud2.txt?rlkey=ejlkecdnpetnnn0pcxrvvilrf')
+        .then(response => response.text())
+        .then(text => {
+          const linkMatch = text.match(/https:\/\/www\.icloud\.com\S*/);
+          if (linkMatch) {
+            newTab.location.href = linkMatch[0];
+          } else {
+            newTab.document.body.innerHTML = '<p style="color:red;">❌ Link not found in file.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          newTab.document.body.innerHTML = '<p style="color:red;">❌ Failed to fetch the link.</p>';
+        });
+    }
+  </script>
+</body>
+</html>
